@@ -1,36 +1,39 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚗 Car Rental App
 
-## Getting Started
+Welcome to **Car Rental App** — a modern platform for managing car rentals with real-time bookings, admin controls, and secure authentication. This project is built with **Next.js 16**, **React**, **Tailwind CSS**, and **PostgreSQL** (via **Drizzle ORM**).  
 
-First, run the development server:
+Whether you’re a customer looking to rent a car or an admin managing vehicles and bookings, this app has you covered!  
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🌟 Key Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### **User Side**
+- **Browse and Search Cars**: Quickly find available vehicles.  
+- **Book Cars**: Reserve cars instantly with a secure booking system.  
+- **View Bookings**: Users can see their active and past bookings.  
+- **Authentication**: Sign up and login securely.  
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### **Admin Side**
+- **User Management**: View, edit, or remove users.  
+- **Car Management**: Add, edit, or remove cars from the system.  
+- **Booking Management**: Track, approve, or cancel bookings.  
+- **Dashboard**: Quick overview of platform activity.  
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 🛠 Technologies Used
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Next.js 16** — Modern React framework with App Router  
+- **React** — Component-based frontend  
+- **Tailwind CSS** — Utility-first styling  
+- **PostgreSQL** — Relational database for storing users, cars, and bookings  
+- **Drizzle ORM** — Type-safe and simple ORM for PostgreSQL  
+- **NextAuth.js / Better Auth** — Secure authentication system  
+- **Next/Image** — Optimized image loading  
+- **Google Fonts** — Outfit, Geist, Geist Mono  
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 📁 Project Structure
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
