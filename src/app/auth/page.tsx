@@ -1,3 +1,4 @@
+import AuthLayout from "@/components/auth/AuthLayout";
 import type { Metadata } from "next";
 
 
@@ -8,9 +9,7 @@ export const metadata: Metadata = {
 
 
 function AuthPage() {
-    return ( 
-        <div>AuthPage</div>
-     );
+    return <AuthLayout />
 }
 
 export default AuthPage;

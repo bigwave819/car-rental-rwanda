@@ -39,7 +39,7 @@ function SearchComponents() {
                 {
                 category.map((item) => {
                     return(
-                        <div className={ item.isActive ?  `bg-black px-3 py-1 gap-5 mr-2` : 'px-3 py-1 gap-5 border border-gray-400 mr-2' }>
+                        <div key={item.id} className={ item.isActive ?  `bg-black px-3 py-1 gap-5 mr-2` : 'px-3 py-1 gap-5 border border-gray-400 mr-2' }>
                             <p className={item.isActive ? 'text-white text-lg' : 'text-black text-lg'}>{item.name}</p>
                         </div>
                     )

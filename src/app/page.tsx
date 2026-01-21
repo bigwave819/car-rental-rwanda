@@ -1,5 +1,6 @@
 import SearchComponents from "@/components/Search";
 import Image from "next/image";
+import Footer from '../components/layout/Footer'
 
 function Index() {
   return (
@@ -92,6 +93,7 @@ function Index() {
           </div>
         </div>
       </section>
+      <Footer />
     </>
   );
 }
