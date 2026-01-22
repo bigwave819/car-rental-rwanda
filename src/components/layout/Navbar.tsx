@@ -3,17 +3,24 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import { usePathname } from 'next/navigation'
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   const router = useRouter()
 
+  const pathname = usePathname()
+
   const links = [
     { name: "Home", href: "/" },
     { name: "About", href: "/about" },
     { name: "Cars", href: "/cars" },
   ];
+
+  if (pathname.startsWith('/admin') || pathname === "not-found") {
+    return null;
+  }
 
   return (
     <nav className="bg-white shadow-md border-b">
