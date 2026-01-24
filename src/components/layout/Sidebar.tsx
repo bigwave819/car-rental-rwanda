@@ -3,6 +3,9 @@
 import Link from "next/link";
 import { Car, Users, CalendarDays, LogOut } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
+import { signOut } from "@/lib/auth-client";
+import { Spinner } from "../ui/spinner";
 
 interface SideBarProps {
     isOpen: boolean;
@@ -16,6 +19,20 @@ function SideBar({ isOpen }: SideBarProps) {
     ];
 
     const pathname = usePathname();
+    const [loading, setLoading] = useState(false);
+
+
+    const handleSignOut = async () => {
+        try {
+            setLoading(true);
+            await signOut();
+            window.location.href = "/";
+        } catch (error) {
+            console.error("Failed to sign out:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <aside
@@ -45,9 +62,22 @@ function SideBar({ isOpen }: SideBarProps) {
             </div>
 
             <div className="absolute bottom-4 px-2">
-                <button className={` ${isOpen && `w-full` } btn flex flex-row space-x-5`}>
-                    <LogOut size={20} />
-                    {isOpen && <span>Logout</span>}
+                <button 
+                    disabled={loading} 
+                    onClick={() => handleSignOut()} 
+                    className={` ${isOpen && `w-full`} btn flex flex-row space-x-5`}
+                >
+                    {loading ? (
+                        <>
+                            <Spinner />
+                            Loading...
+                        </>
+                    ) : (
+                        <>
+                            <LogOut size={20} />
+                            {isOpen && <span>Logout</span>}
+                        </>
+                    )}
                 </button>
             </div>
         </aside>

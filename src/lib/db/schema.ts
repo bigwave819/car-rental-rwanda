@@ -1,5 +1,5 @@
-import { relations } from "drizzle-orm";
-import { pgTable, text, timestamp, boolean, index } from "drizzle-orm/pg-core";
+import { relations, sql } from "drizzle-orm";
+import { pgTable, text, timestamp, boolean, index, integer } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -77,6 +77,24 @@ export const verification = pgTable(
   },
   (table) => [index("verification_identifier_idx").on(table.identifier)],
 );
+
+export const cars = pgTable('cars', {
+  id: text('id').primaryKey().default(sql`gen_random_uuid()`),
+  name: text('name').notNull(),
+  brand: text('brand').notNull(),
+  category: text('category').notNull(),
+  fueltype: text('fuel_type').notNull(),
+  transimission: text("transimition").notNull(),
+  seats: text('seats').notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  status: text("status").default("available"),
+  pricePerDay: integer("price_per_day").notNull(),
+  fileUrl: text('file_url').notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => new Date())
+    .notNull(),
+});
 
 export const userRelations = relations(user, ({ many }) => ({
   sessions: many(session),

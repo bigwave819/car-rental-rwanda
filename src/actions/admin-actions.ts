@@ -1,10 +1,11 @@
-import { user } from './../lib/db/schema';
+'use server'
+
+import { cars, user } from '@/lib/db/schema';
 import { auth } from "@/lib/auth";
 import { db } from '@/lib/db';
+import { revalidatePath } from 'next/cache';
 import { headers } from "next/headers";
 import { redirect } from 'next/navigation';
-
-
 
 
 export async function getAllUser() {
@@ -26,5 +27,43 @@ export async function getAllUser() {
         console.log(users);
     } catch (error: any) {
         return [];
+    }
+}
+
+export async function createCars(data: {
+    name: string;
+    brand: string;
+    category: string;
+    fueltype: string;
+    transimission: string;
+    seats: string;
+    pricePerDay: number;
+    fileUrl: string;
+}) {
+    try {
+        const session = await auth.api.getSession({
+            headers: await headers()
+        })
+
+        if (!session?.user || session.user.role != "admin") {
+            redirect('/')
+        }
+
+        await db.insert(cars).values({
+            ...data,
+        });
+
+        revalidatePath("/admin/cars")
+
+        return {
+            success: true,
+            message: 'successfully add the menu'
+        }
+    } catch (error) {
+        console.log(error);
+        return {
+            success: false,
+            message: 'faild to store the user assets'
+        }
     }
 }
