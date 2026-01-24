@@ -1,6 +1,11 @@
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-
-
+import { 
+    Table, 
+    TableBody, 
+    TableCell, 
+    TableHead, 
+    TableHeader, 
+    TableRow 
+} from "@/components/ui/table";
 
 interface user {
     id: string
@@ -8,7 +13,6 @@ interface user {
     email: string;
     role: string | null;
 }
-
 interface UserListProps {
     users: user[]
 }

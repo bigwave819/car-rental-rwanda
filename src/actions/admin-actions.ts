@@ -24,7 +24,6 @@ export async function getAllUser() {
             .orderBy(user.name);
 
         return users
-        console.log(users);
     } catch (error: any) {
         return [];
     }
@@ -65,5 +64,15 @@ export async function createCars(data: {
             success: false,
             message: 'faild to store the user assets'
         }
+    }
+}
+
+export async function getAllCars() {
+    try {
+        const car = await db.select().from(cars).orderBy(cars.createdAt);
+        return car
+    } catch (error) {
+        console.log(error);
+        return []
     }
 }

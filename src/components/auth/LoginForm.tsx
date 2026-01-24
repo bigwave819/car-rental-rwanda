@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { signIn } from '@/lib/auth-client';
 import { useRouter } from 'next/navigation';
+import { Spinner } from '../ui/spinner';
 
 interface LoginFormProps {
   switchToSignup: () => void;
@@ -83,7 +84,18 @@ function LoginForm({ switchToSignup }: LoginFormProps) {
         Forgot Your Password?
       </p>
 
-      <button className="btn">Login</button>
+      <button 
+        className="btn"
+        disabled={loading}
+      >
+        { loading ? (
+          <Spinner />
+        ) : (
+          <>
+            <p>loading</p>
+          </>
+        ) }
+      </button>
 
       <p className="text-gray-500">
         Don't have an account?{" "}

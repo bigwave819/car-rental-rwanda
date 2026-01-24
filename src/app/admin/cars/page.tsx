@@ -1,10 +1,13 @@
+import { getAllCars } from "@/actions/admin-actions";
 import Addcars from "@/components/admin/cars/Addcars";
+import ViewCars from "@/components/admin/cars/ViewCars";
 
 
 
-function CarsPage() {
+async function CarsPage() {
+    const cars = await getAllCars();
     return (
-        <div className="w-full min-h-screen space-y-6">
+        <div className="w-full min-h-screen space-y-6 ">
 
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
 
@@ -17,6 +20,7 @@ function CarsPage() {
                 <Addcars />
             </div>
 
+            <ViewCars cars={cars} />
         </div>
     );
 }

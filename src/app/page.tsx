@@ -1,16 +1,17 @@
 import SearchComponents from "@/components/Search";
 import Image from "next/image";
 import Footer from '../components/layout/Footer'
+import ViewCars from "@/components/admin/cars/ViewCars";
+import { getAllCars } from "@/actions/admin-actions";
 
-function Index() {
+async function Index() {
+  const cars = await getAllCars()
   return (
     <>
       {/* Hero Section */}
       <section className="w-full bg-white">
-        {/* Changed h-[70vh] to min-h-[70vh] to prevent overflow on small screens */}
         <div className="flex flex-col items-center justify-center min-h-[70vh] max-w-7xl mx-auto px-5 py-10 md:px-10 gap-10">
           <div className="w-full lg:w-2/3 text-center">
-            {/* Added font-outfit */}
             <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-black font-outfit tracking-tight">
               Affordable Car Rentals,<br /> Anytime, Anywhere
             </h2>
@@ -25,7 +26,7 @@ function Index() {
               width={800}
               height={500}
               className="object-contain"
-              priority // High priority for Hero image
+              priority
             />
           </div>
         </div>
@@ -42,12 +43,13 @@ function Index() {
           </p>
           <div className="w-full mt-12">
             <SearchComponents />
+            <ViewCars cars={cars.slice(0, 6)} />
           </div>
         </div>
       </section>
 
       {/* Luxury Car Listing Section */}
-      <section className="w-full bg-white py-16">
+      <section className="w-full bg-white py-16 px-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-10 max-w-6xl mx-auto px-6 bg-black p-8 md:p-16">
           <div className="md:w-3/5 text-white flex flex-col gap-6">
             <h1 className="text-3xl md:text-4xl font-bold font-outfit leading-tight">
