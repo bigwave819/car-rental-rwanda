@@ -3,6 +3,7 @@ import Image from "next/image";
 import Footer from '../components/layout/Footer'
 import ViewCars from "@/components/admin/cars/ViewCars";
 import { getAllCars } from "@/actions/admin-actions";
+import Link from "next/link";
 
 async function Index() {
   const cars = await getAllCars()
@@ -45,6 +46,7 @@ async function Index() {
             <SearchComponents />
             <ViewCars cars={cars.slice(0, 6)} />
           </div>
+          <Link href={`/cars`} className="text-black border border-black px-4 py-2 cursor-pointer hover:scale-125 duration-500 ease-in">View All</Link>
         </div>
       </section>
 

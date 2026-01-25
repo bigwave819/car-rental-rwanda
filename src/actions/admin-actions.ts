@@ -6,6 +6,7 @@ import { db } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import { headers } from "next/headers";
 import { redirect } from 'next/navigation';
+import { eq } from 'drizzle-orm';
 
 
 export async function getAllUser() {
@@ -74,5 +75,16 @@ export async function getAllCars() {
     } catch (error) {
         console.log(error);
         return []
+    }
+}
+
+export async function getCarDetails(id: string) {
+    try {
+        const car = await db.select().from(cars).where(eq(cars.id, id)).limit(1)
+
+        return car
+    } catch (error) {
+        console.log(error);
+        return [];
     }
 }
