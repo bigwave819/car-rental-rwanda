@@ -96,6 +96,38 @@ export const cars = pgTable('cars', {
     .notNull(),
 });
 
+export const bookings = pgTable("bookings", {
+  id: text("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
+  carId: text("car_id").notNull().references(() => cars.id, { onDelete: "cascade" }),
+  startDate: timestamp("start_date").notNull(),
+  phone: text("phone").notNull(),
+  endDate: timestamp("end_date").notNull(),
+  totalPrice: integer("total_price").notNull(),
+  status: text("status").default("pending").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().$onUpdate(() => new Date()).notNull(),
+});
+
+export const bookingRelations = relations(bookings, ({ one }) => ({
+  user: one(user, {
+    fields: [bookings.userId],
+    references: [user.id],
+  }),
+  car: one(cars, {
+    fields: [bookings.carId],
+    references: [cars.id],
+  }),
+}));
+
+export const userBookingRelations = relations(user, ({ many }) => ({
+  bookings: many(bookings),
+}));
+
+export const carBookingRelations = relations(cars, ({ many }) => ({
+  bookings: many(bookings),
+}));
+
 export const userRelations = relations(user, ({ many }) => ({
   sessions: many(session),
   accounts: many(account),

@@ -1,6 +1,6 @@
 'use server'
 
-import { cars, user } from '@/lib/db/schema';
+import { bookings, cars, user } from '@/lib/db/schema';
 import { auth } from "@/lib/auth";
 import { db } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
@@ -78,13 +78,19 @@ export async function getAllCars() {
     }
 }
 
-export async function getCarDetails(id: string) {
+export async function getAllBookings() {
     try {
-        const car = await db.select().from(cars).where(eq(cars.id, id)).limit(1)
+        const session = await auth.api.getSession({
+            headers: await headers()
+        })
 
-        return car
+        if (!session?.user || session.user.role != "admin") {
+            redirect('/')
+        }
+        const booking = await db.select().from(bookings).orderBy(bookings.createdAt);
+        return booking
     } catch (error) {
         console.log(error);
-        return [];
+        return []
     }
 }

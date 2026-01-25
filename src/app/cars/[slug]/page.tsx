@@ -1,5 +1,6 @@
 export const dynamic = "force-dynamic";
-import { getCarDetails } from "@/actions/admin-actions";
+import { getCarDetails } from "@/actions/user-action";
+import BookCarDialog from "@/components/booking";
 import { Metadata } from "next";
 import Image from "next/image";
 
@@ -66,11 +67,7 @@ async function CarDetailsPage({
                         <Spec label="Status" value={car.status || "unknown"} />
                     </div>
 
-                    <div className="mt-10 flex flex-col sm:flex-row gap-4">
-                        <button className="btn">
-                            Book Now
-                        </button>
-                    </div>
+                    <BookCarDialog carId={car.id} carPricePerDay={car.pricePerDay} />
                 </div>
             </div>
         </div>

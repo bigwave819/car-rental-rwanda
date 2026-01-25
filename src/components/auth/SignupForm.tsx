@@ -2,8 +2,11 @@ import * as z from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
-import { signUp } from '@/lib/auth-client';
+import { signIn, signUp } from '@/lib/auth-client';
 import { useRouter } from 'next/navigation';
+import { } from 'lucide-react'
+import { Spinner } from '../ui/spinner';
+import { FcGoogle } from 'react-icons/fc'
 
 interface SignupFormProps {
   switchToLogin: () => void;
@@ -53,6 +56,18 @@ function SignupForm({ switchToLogin }: SignupFormProps) {
     }
   }
 
+  const handleGoogleSignup = async () => {
+    try {
+      await signIn.social({
+        provider: "google",
+        callbackURL: "/"
+      });
+    } catch (error) {
+      console.error(error);
+      alert("Google signup failed");
+    }
+  };
+
   return (
     <form className="space-y-4" onSubmit={handleSubmit(onsubmit)}>
       <h2 className="text-xl font-bold text-black">Create Account</h2>
@@ -89,7 +104,26 @@ function SignupForm({ switchToLogin }: SignupFormProps) {
         )}
       </div>
 
-      <button className="btn">Sign Up</button>
+      <button
+        className="btn w-full"
+        disabled={loading}
+      >
+        {loading ? (
+          <Spinner />
+        ) : (
+          <>
+            <p>SIGN UP</p>
+          </>
+        )}
+      </button>
+
+      <hr />
+      <button
+        onClick={handleGoogleSignup}
+        className='w-full border border-black py-2 hover:bg-black hover:text-white ease-in duration-500 cursor-pointer'
+      >
+        <FcGoogle />
+        Login With Google</button>
 
       <p className="text-gray-500">
         Already have an account?{" "}

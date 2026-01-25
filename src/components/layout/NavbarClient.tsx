@@ -40,7 +40,9 @@ function NavbarClient({ session }: NavbarClientProps) {
               >
                 {link.name}
               </Link>
+              
             ))}
+            { session && ( <Link href={`/bookings`}>Bookings</Link> ) }
           </div>
 
           <div className="hidden md:block">

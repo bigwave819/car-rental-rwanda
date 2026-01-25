@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { signIn } from '@/lib/auth-client';
 import { useRouter } from 'next/navigation';
 import { Spinner } from '../ui/spinner';
+import { FcGoogle } from 'react-icons/fc'
 
 interface LoginFormProps {
   switchToSignup: () => void;
@@ -51,6 +52,18 @@ function LoginForm({ switchToSignup }: LoginFormProps) {
       setLoading(false)
     }
   }
+
+  const handleGoogleLogin = async () => {
+        try {
+            await signIn.social({
+                provider: 'google',
+                callbackURL: "/"
+            })
+        } catch (error) {
+            console.error(error);
+            alert('google login failed')
+        }
+    }
   
   return (
     <form className="space-y-4" onSubmit={handleSubmit(onsubmit)}>
@@ -85,17 +98,25 @@ function LoginForm({ switchToSignup }: LoginFormProps) {
       </p>
 
       <button 
-        className="btn"
+        className="btn w-full"
         disabled={loading}
       >
         { loading ? (
           <Spinner />
         ) : (
           <>
-            <p>loading</p>
+            <p>Login Here</p>
           </>
         ) }
       </button>
+
+      <hr/>
+      <button 
+        className='w-full border border-black py-2 hover:bg-black hover:text-white ease-in duration-500 cursor-pointer'
+        onClick={handleGoogleLogin}
+      >
+        <FcGoogle />
+        Login With Google</button>
 
       <p className="text-gray-500">
         Don't have an account?{" "}
