@@ -46,7 +46,7 @@ export default function UserAvatarMenu({ user }: Props) {
         <DropdownMenuSeparator />
 
         <DropdownMenuItem asChild>
-          <Link href="/user/profile" className="flex items-center gap-2">
+          <Link href="/profile" className="flex items-center gap-2">
             <UserIcon size={16} /> View Profile
           </Link>
         </DropdownMenuItem>

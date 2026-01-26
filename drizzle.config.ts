@@ -10,3 +10,5 @@ export default {
     verbose : true,
     strict: true
 } as Config
+
+console.log(process.env.DATABASE_URL);

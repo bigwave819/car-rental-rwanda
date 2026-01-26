@@ -1,135 +1,184 @@
-import * as z from 'zod'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
-import { signIn, signUp } from '@/lib/auth-client';
-import { useRouter } from 'next/navigation';
-import { } from 'lucide-react'
-import { Spinner } from '../ui/spinner';
-import { FcGoogle } from 'react-icons/fc'
+"use client";
+
+import * as z from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { signIn, signUp } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+import { Spinner } from "../ui/spinner";
+import { FcGoogle } from "react-icons/fc";
 
 interface SignupFormProps {
   switchToLogin: () => void;
 }
 
-const SignupSchema = z.object({
-  name: z.string().min(2, 'atleast 2 characters'),
-  email: z.string().email("enter the valid email address"),
-  password: z.string().min(8, 'enter atleast 8 characters').max(12, 'only allowed 12 characters')
-})
+const signupSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(2, "Name must be at least 2 characters"),
+  email: z
+    .string()
+    .trim()
+    .email("Please enter a valid email address"),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .max(12, "Password must not exceed 12 characters"),
+});
 
-type SignupFormValues = z.infer<typeof SignupSchema>
+type SignupFormValues = z.infer<typeof signupSchema>;
 
-function SignupForm({ switchToLogin }: SignupFormProps) {
+export default function SignupForm({ switchToLogin }: SignupFormProps) {
+  const [loading, setLoading] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
 
-  const [loading, setLoading] = useState(false)
+  const router = useRouter();
 
-  const router = useRouter()
-
-  const { register, handleSubmit, formState: { errors } } = useForm<SignupFormValues>({
-    resolver: zodResolver(SignupSchema),
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignupFormValues>({
+    resolver: zodResolver(signupSchema),
     defaultValues: {
-      email: '',
-      password: ''
-    }
+      name: "",
+      email: "",
+      password: "",
+    },
   });
 
-  const onsubmit = async (data: SignupFormValues) => {
-    setLoading(true)
+  const onSubmit = async (data: SignupFormValues) => {
+    setLoading(true);
+    setFormError(null);
+
     try {
       const res = await signUp.email({
         name: data.name,
         email: data.email,
-        password: data.password
-      })
-      if (res.error) {
-        alert("Login failed: " + res.error.message);
+        password: data.password,
+      });
+
+      if (res?.error) {
+        setFormError(res.error.message || "Signup failed");
         return;
       }
 
-      router.push('/')
+      router.push("/");
     } catch (error) {
       console.error(error);
-      alert("login failed")
+      setFormError("Something went wrong. Please try again.");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleGoogleSignup = async () => {
+    if (loading) return;
+
     try {
       await signIn.social({
         provider: "google",
-        callbackURL: "/"
+        callbackURL: "/",
       });
     } catch (error) {
       console.error(error);
-      alert("Google signup failed");
+      setFormError("Google signup failed. Try again.");
     }
   };
 
   return (
-    <form className="space-y-4" onSubmit={handleSubmit(onsubmit)}>
-      <h2 className="text-xl font-bold text-black">Create Account</h2>
-      <p className="text-gray-400">
-        Sign up to start booking your favorite <br /> cars easily.
-      </p>
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+      <div className="space-y-1">
+        <h2 className="text-xl font-bold text-black">Create Account</h2>
+        <p className="text-gray-500 text-sm">
+          Sign up to start booking your favorite cars easily.
+        </p>
+      </div>
 
-      <div className="space-y-6">
-        <input
-          placeholder="Full name"
-          className="input"
-          {...register("name")}
-        />
-        {errors.name && (
-          <p className="text-sm text-red-500 mt-1">{errors.name.message}</p>
-        )}
-        <input
-          placeholder="Email"
-          className="input"
-          type="email"
-          {...register("email")}
-        />
-        {errors.email && (
-          <p className="text-sm text-red-500 mt-1">{errors.email.message}</p>
-        )}
-        <input
-          placeholder="Password"
-          className="input"
-          type="password"
-          {...register("password")}
-        />
-        {errors.password && (
-          <p className="text-sm text-red-500 mt-1">{errors.password.message}</p>
-        )}
+      {formError && (
+        <div className="bg-red-50 text-red-600 text-sm p-3 rounded">
+          {formError}
+        </div>
+      )}
+
+      <div className="space-y-4">
+        <div>
+          <label className="sr-only">Full Name</label>
+          <input
+            placeholder="Enter your name"
+            className="input"
+            {...register("name")}
+          />
+          {errors.name && (
+            <p className="text-xs text-red-500 mt-1">
+              {errors.name.message}
+            </p>
+          )}
+        </div>
+
+        <div>
+          <label className="sr-only">Email</label>
+          <input
+            type="email"
+            placeholder="Enter Email address"
+            className="input"
+            {...register("email")}
+          />
+          {errors.email && (
+            <p className="text-xs text-red-500 mt-1">
+              {errors.email.message}
+            </p>
+          )}
+        </div>
+
+        <div>
+          <label className="sr-only">Password</label>
+          <input
+            type="password"
+            placeholder="Create a password"
+            className="input"
+            {...register("password")}
+          />
+          {errors.password && (
+            <p className="text-xs text-red-500 mt-1">
+              {errors.password.message}
+            </p>
+          )}
+        </div>
       </div>
 
       <button
-        className="btn w-full"
+        type="submit"
+        className="btn w-full flex justify-center"
         disabled={loading}
       >
-        {loading ? (
-          <Spinner />
-        ) : (
-          <>
-            <p>SIGN UP</p>
-          </>
-        )}
+        {loading ? <Spinner /> : "Sign Up"}
       </button>
 
-      <hr />
-      <button
-        onClick={handleGoogleSignup}
-        className='w-full border border-black py-2 hover:bg-black hover:text-white ease-in duration-500 cursor-pointer'
-      >
-        <FcGoogle />
-        Login With Google</button>
+      <div className="relative my-4">
+        <hr />
+        <span className="absolute inset-x-0 -top-2 text-center text-xs text-gray-400 bg-white px-2 w-fit mx-auto">
+          OR
+        </span>
+      </div>
 
-      <p className="text-gray-500">
+      <button
+        type="button"
+        onClick={handleGoogleSignup}
+        disabled={loading}
+        className="w-full flex items-center justify-center gap-2 border border-black py-2 rounded hover:bg-black hover:text-white transition"
+      >
+        <FcGoogle size={18} />
+        Sign up with Google
+      </button>
+
+      <p className="text-sm text-gray-500 text-center">
         Already have an account?{" "}
         <span
           onClick={switchToLogin}
-          className="hover:underline text-blue-500 cursor-pointer"
+          className="text-blue-600 hover:underline cursor-pointer"
         >
           Login here
         </span>
@@ -137,5 +186,3 @@ function SignupForm({ switchToLogin }: SignupFormProps) {
     </form>
   );
 }
-
-export default SignupForm;

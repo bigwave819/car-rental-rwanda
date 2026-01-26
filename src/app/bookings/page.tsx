@@ -1,7 +1,23 @@
+export const dynamic = "force-dynamic";
 import { getAllUserBookings } from "@/actions/user-action";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 async function BookingsPage() {
   const bookings = await getAllUserBookings();
+
+  const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+  if (!session?.user) {
+      redirect("/auth");
+    }
+  
+    if (session.user.role == "admin") {
+      redirect("/admin/cars")
+    }
 
   return (
     <div className="min-h-screen p-6 bg-slate-50">

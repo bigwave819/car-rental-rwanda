@@ -10,7 +10,7 @@ const nextConfig: NextConfig = {
         pathname: '/ddm98oyej/image/upload/**',
       },
     ]
-  }
+  },
 };
 
 export default nextConfig;

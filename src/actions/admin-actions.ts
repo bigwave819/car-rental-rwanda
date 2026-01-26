@@ -6,7 +6,7 @@ import { db } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import { headers } from "next/headers";
 import { redirect } from 'next/navigation';
-import { eq } from 'drizzle-orm';
+import { eq, desc } from 'drizzle-orm';
 
 
 export async function getAllUser() {
@@ -70,7 +70,7 @@ export async function createCars(data: {
 
 export async function getAllCars() {
     try {
-        const car = await db.select().from(cars).orderBy(cars.createdAt);
+        const car = await db.select().from(cars).orderBy(desc(cars.createdAt));
         return car
     } catch (error) {
         console.log(error);
@@ -79,18 +79,62 @@ export async function getAllCars() {
 }
 
 export async function getAllBookings() {
-    try {
-        const session = await auth.api.getSession({
-            headers: await headers()
-        })
+  try {
+    // 🔐 Auth check
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
 
-        if (!session?.user || session.user.role != "admin") {
-            redirect('/')
-        }
-        const booking = await db.select().from(bookings).orderBy(bookings.createdAt);
-        return booking
-    } catch (error) {
-        console.log(error);
-        return []
+    if (!session?.user || session.user.role !== "admin") {
+      redirect("/");
     }
+
+    // 📦 Fetch bookings with relations
+    const result = await db
+      .select({
+        id: bookings.id,
+        startDate: bookings.startDate,
+        endDate: bookings.endDate,
+        phone: bookings.phone,
+        totalPrice: bookings.totalPrice,
+        status: bookings.status,
+        createdAt: bookings.createdAt,
+
+        // 👤 User
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+        },
+
+        // 🚗 Car
+        car: {
+          id: cars.id,
+          name: cars.name,
+          model: cars.brand,
+        },
+      })
+      .from(bookings)
+      .innerJoin(user, eq(bookings.userId, user.id))
+      .innerJoin(cars, eq(bookings.carId, cars.id))
+      .orderBy(desc(bookings.createdAt));
+
+    // 🧮 Add derived fields (days booked)
+    const enhancedBookings = result.map((booking) => {
+      const days =
+        (new Date(booking.endDate).getTime() -
+          new Date(booking.startDate).getTime()) /
+        (1000 * 60 * 60 * 24);
+
+      return {
+        ...booking,
+        daysBooked: Math.ceil(days),
+      };
+    });
+
+    return enhancedBookings;
+  } catch (error) {
+    console.error("Failed to fetch bookings:", error);
+    return [];
+  }
 }
